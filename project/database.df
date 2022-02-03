@@ -1,0 +1,3 @@
+FROM postgres
+ENV POSTGRES_DB=homeloandr
+ENV POSTGRES_PASSWORD=123
