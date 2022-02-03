@@ -1,0 +1,41 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "homedb-2"
+  namespace: "default"
+  labels:
+    app: "homedb-2"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: "homedb-2"
+  template:
+    metadata:
+      labels:
+        app: "homedb-2"
+    spec:
+      containers:
+      - name: "homeloandr-sha256-1"
+        image: "gcr.io/gcpdemo-334906/github.com/pranalipol3/homeloandr@sha256:b6bc75310054c6e817164010ae5f4da081a48ad2c748e684e1a2adbc2db751b6"
+---
+apiVersion: "autoscaling/v2beta1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "homedb-2-hpa-ckeg"
+  namespace: "default"
+  labels:
+    app: "homedb-2"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "homedb-2"
+    apiVersion: "apps/v1"
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: "Resource"
+    resource:
+      name: "cpu"
+      targetAverageUtilization: 80
