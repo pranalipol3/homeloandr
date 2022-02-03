@@ -1,0 +1,41 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "homeloanppp"
+  namespace: "default"
+  labels:
+    app: "homeloanppp"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: "homeloanppp"
+  template:
+    metadata:
+      labels:
+        app: "homeloanppp"
+    spec:
+      containers:
+      - name: "homeloandr-sha256-1"
+        image: "gcr.io/gcpdemo-334906/github.com/pranalipol3/homeloandr@sha256:646c6fb4e332ddff76974cb730f7d6bfa30333fd5ba1f26a33ef96e33319cf11"
+---
+apiVersion: "autoscaling/v2beta1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "homeloanppp-hpa-fuez"
+  namespace: "default"
+  labels:
+    app: "homeloanppp"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "homeloanppp"
+    apiVersion: "apps/v1"
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: "Resource"
+    resource:
+      name: "cpu"
+      targetAverageUtilization: 80
